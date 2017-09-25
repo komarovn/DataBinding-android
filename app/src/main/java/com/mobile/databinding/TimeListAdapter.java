@@ -1,6 +1,7 @@
 package com.mobile.databinding;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ public class TimeListAdapter extends BaseExpandableListAdapter {
     private Context owner;
     private List<String> data;
     private int currentSelected;
+    private TextView title;
 
     public TimeListAdapter(Context owner, List<String> data) {
         this.owner = owner;
@@ -27,6 +29,10 @@ public class TimeListAdapter extends BaseExpandableListAdapter {
 
     public void setCurrentSelected(int currentSelected) {
         this.currentSelected = currentSelected;
+    }
+
+    public TextView getTitle() {
+        return title;
     }
 
     @Override
@@ -66,14 +72,14 @@ public class TimeListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        String currentValue = data.get(currentSelected);
+        String currentValue = data.get(getCurrentSelected());
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) owner.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.time_list, null);
         }
 
-        TextView title = (TextView) convertView.findViewById(R.id.timeListTitle);
+        title = (TextView) convertView.findViewById(R.id.timeListTitle);
         title.setText(currentValue);
 
         return convertView;
@@ -90,6 +96,11 @@ public class TimeListAdapter extends BaseExpandableListAdapter {
 
         TextView item = (TextView) convertView.findViewById(R.id.timeListItem);
         item.setText(textItem);
+        if (childPosition == currentSelected) {
+            item.setTextColor(Color.BLACK);
+        } else {
+            item.setTextColor(Color.GRAY);
+        }
 
         return convertView;
     }

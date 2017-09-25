@@ -8,7 +8,7 @@ public abstract class DateTimeUtils {
     public static List<String> getHours() {
         List<String> hrs = new ArrayList<String>();
 
-        for (int hour = 0; hour <= 24; hour++) {
+        for (int hour = 0; hour < 24; hour++) {
             hrs.add(String.valueOf(hour));
         }
 
@@ -18,7 +18,10 @@ public abstract class DateTimeUtils {
     public static List<String> getMinutes() {
         List<String> mins = new ArrayList<String>();
 
-        for (int minute = 0; minute < 60; minute++) {
+        for (int minute = 0; minute < 10; minute++) {
+            mins.add("0" + String.valueOf(minute));
+        }
+        for (int minute = 10; minute < 60; minute++) {
             mins.add(String.valueOf(minute));
         }
 
