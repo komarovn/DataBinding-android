@@ -1,9 +1,20 @@
 package com.mobile.databinding;
 
-public class TimeCalculatorExecutor {
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 
-    public int convertTimeIntoMins(Time startTime, Time endTime) {
-        return endTime.convertToMins() - startTime.convertToMins();
+public class TimeCalculatorExecutor extends BaseObservable {
+    private String differenceInMins;
+
+    @Bindable
+    public String getDifferenceInMins() {
+        return differenceInMins;
+    }
+
+    public void convertTimeIntoMins(Time startTime, Time endTime) {
+        int difference = endTime.convertToMins() - startTime.convertToMins();
+        differenceInMins = String.valueOf(difference);
+        notifyPropertyChanged(BR.differenceInMins);
     }
 
 }

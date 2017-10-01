@@ -1,12 +1,14 @@
 package com.mobile.databinding;
 
+import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.TextView;
+
+import com.mobile.databinding.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
     private TimeCalculatorExecutor executor = new TimeCalculatorExecutor();
@@ -14,14 +16,13 @@ public class MainActivity extends AppCompatActivity {
     private Time startTime = new Time(0, 0);
     private Time endTime = new Time(0, 0);
 
-    private TextView resultTextView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        resultTextView = (TextView) findViewById(R.id.result);
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.setExecutor(executor);
+        processResult();
 
         final ExpandableListView hoursStart = (ExpandableListView) findViewById(R.id.hoursStart);
         final ExpandableListAdapter hoursStartAdapter = new TimeListAdapter(this, DateTimeUtils.getHours());
@@ -38,6 +39,22 @@ public class MainActivity extends AppCompatActivity {
         addOnChildClickHandler(minsStart, (TimeListAdapter) minsStartAdapter, startTime, false);
         addOnGroupExpandHandler(minsStart, (TimeListAdapter) minsStartAdapter);
         addOnGroupCollapseHandler(minsStart, (TimeListAdapter) minsStartAdapter);
+
+        final ExpandableListView hoursEnd = (ExpandableListView) findViewById(R.id.hoursEnd);
+        final ExpandableListAdapter hoursEndAdapter = new TimeListAdapter(this, DateTimeUtils.getHours());
+        hoursEnd.setAdapter(hoursEndAdapter);
+
+        addOnChildClickHandler(hoursEnd, (TimeListAdapter) hoursEndAdapter, endTime, true);
+        addOnGroupExpandHandler(hoursEnd, (TimeListAdapter) hoursEndAdapter);
+        addOnGroupCollapseHandler(hoursEnd, (TimeListAdapter) hoursEndAdapter);
+
+        final ExpandableListView minsEnd = (ExpandableListView) findViewById(R.id.minsEnd);
+        final ExpandableListAdapter minsEndAdapter = new TimeListAdapter(this, DateTimeUtils.getMinutes());
+        minsEnd.setAdapter(minsEndAdapter);
+
+        addOnChildClickHandler(minsEnd, (TimeListAdapter) minsEndAdapter, endTime, false);
+        addOnGroupExpandHandler(minsEnd, (TimeListAdapter) minsEndAdapter);
+        addOnGroupCollapseHandler(minsEnd, (TimeListAdapter) minsEndAdapter);
 
     }
 
@@ -79,14 +96,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onGroupCollapse(int groupPosition) {
                 listView.getLayoutParams().height = listView.getHeight() / 5;
-                adapter.getTitle().getLayoutParams().height = convertDpToPx(56);
+                adapter.getTitle().getLayoutParams().height = convertDpToPx(66);
             }
         });
     }
 
     public void processResult() {
-        int result = executor.convertTimeIntoMins(startTime, endTime);
-        resultTextView.setText(String.valueOf(result));
+        executor.convertTimeIntoMins(startTime, endTime);
     }
 
     public int convertDpToPx(int dp) {
