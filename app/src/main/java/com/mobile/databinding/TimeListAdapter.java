@@ -29,6 +29,7 @@ public class TimeListAdapter extends BaseExpandableListAdapter {
 
     public void setCurrentSelected(int currentSelected) {
         this.currentSelected = currentSelected;
+        title.setText(data.get(currentSelected));
     }
 
     public TextView getTitle() {

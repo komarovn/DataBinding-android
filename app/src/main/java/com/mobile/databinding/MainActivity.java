@@ -5,10 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
 import com.mobile.databinding.databinding.ActivityMainBinding;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private TimeCalculatorExecutor executor = new TimeCalculatorExecutor();
@@ -56,6 +60,22 @@ public class MainActivity extends AppCompatActivity {
         addOnGroupExpandHandler(minsEnd, (TimeListAdapter) minsEndAdapter);
         addOnGroupCollapseHandler(minsEnd, (TimeListAdapter) minsEndAdapter);
 
+        Button currentTimeStartButton = (Button) findViewById(R.id.startCurrentButton);
+        Button currentTimeEndButton = (Button) findViewById(R.id.endCurrentButton);
+
+        currentTimeStartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCurrentTime(startTime, (TimeListAdapter) hoursStartAdapter, (TimeListAdapter) minsStartAdapter);
+            }
+        });
+
+        currentTimeEndButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCurrentTime(endTime, (TimeListAdapter) hoursEndAdapter, (TimeListAdapter) minsEndAdapter);
+            }
+        });
     }
 
     public void addOnChildClickHandler(final ExpandableListView listView,
@@ -85,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
             public void onGroupExpand(int groupPosition) {
                 listView.getLayoutParams().height = listView.getHeight() * 5;
                 adapter.getTitle().getLayoutParams().height = 0;
-                /*listView.scrollTo(0, convertDpToPx(26) * adapter.getCurrentSelected());*/
             }
         });
     }
@@ -107,6 +126,15 @@ public class MainActivity extends AppCompatActivity {
 
     public int convertDpToPx(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
+    }
+
+    public void setCurrentTime(Time time, TimeListAdapter hrsAdapter, TimeListAdapter minsAdapter) {
+        Date currentDate = Calendar.getInstance().getTime();
+        time.setHours(currentDate.getHours());
+        time.setMins(currentDate.getMinutes());
+        hrsAdapter.setCurrentSelected(time.getHours());
+        minsAdapter.setCurrentSelected(time.getMins());
+        processResult();
     }
 
 }
